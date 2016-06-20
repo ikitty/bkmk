@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8" />
+<title>DEMO</title>
+<link rel="stylesheet" href="style.css" type="text/css" media="screen" />
+<script src = "https://cdn.wilddog.com/js/client/current/wilddog.js" ></script>
+<script src="lib/react.js"></script>
+<script src="lib/react-dom.js"></script>
+<script src="lib/browser.min.js"></script>
+</head>
+<body>
+
+<div class="main">
+    <div class=""> <strong>Add:</strong> </div>
+    <div id="babyAdd" class="">
+        
+    </div>
+    <div class=""> <strong>List:</strong> </div>
+    <div id="babyList" class="baby_list">
+        
+    </div>
+
+    -----------
+
+    <div class="add_area">
+        Name: <input type="text" value="" id="linkName" autocomplete="off"/>
+        Url: <input type="text" value="" id="linkUrl" autocomplete="off"/>
+        <input type="button" id="addLink" value="Add"/>
+    </div>
+
+    <div class="">
+        <strong>Fav link list:</strong>
+    </div>
+    <div id="linkList" class="link_list">
+        
+    </div>
+    <div id="modify" class="hide">
+        NewName: <input type="text" value="" id="newName"  autocomplete="off"/>
+        NewUrl: <input type="text" value="" id="newUrl" autocomplete="off"/>
+        <input type="button" id="updateLink" value="Update"/>
+    </div>
+</div>
+
+<script type="text/javascript" src="lib/jquery.min.js"></script>
+<script type="text/babel" src="index.jsx"></script>
+
+<script type="text/javascript">
+    var ref = new Wilddog("https://bkmk.wilddogio.com/users");
+    $('#linkList').click(function (e) {
+        var target = e.target ;
+        if (target.nodeName.toLowerCase() == 'b' ) {
+            $('#modify').show();
+            $('#updateLink').click(function () {
+                ref.child($(target).data('key')).update({
+                    "name": $('#newName').val(),
+                    "url": $('#newUrl').val()
+                });
+                $(this).off('click')
+
+                $('#modify').hide();
+            })
+
+            return  ;
+        }
+    })
+
+    
+</script>
+</body>
+</html>

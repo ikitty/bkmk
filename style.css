@@ -1,0 +1,11 @@
+* {margin:0;padding:0;list-style:none;}
+body {font:400 14px/22px Arial,Simsun;}
+.hide {display:none;}
+
+.main {width:500px;margin:0 auto;padding:20px 0px;}
+
+.btn {padding:5px 10px;}
+.btn_del {color:#c00;}
+.btn_edit {color:#39f;}
+
+.baby_list li {margin-top:10px;}

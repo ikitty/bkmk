@@ -13,13 +13,37 @@ var BabyList = React.createClass({
             }
         });
     },
-    handleDelClick: function (e) {
-        var target = e.target ;
-        if (!$(target).hasClass('btn_del')) { return  ; }
+    handleOpClick: function (e) {
+        var target = $(e.target);
+        var ancestorNode = target.parent().parent();
+        var key = ancestorNode.data('index');
 
-        var key = $($(e.target).parent()).data('index');
-        if (key) {
+        if (!key) { return  ; }
+
+        if (target.hasClass('btn_del')) {
             ref.child(key).remove();
+            return  ;
+        }
+        if (target.hasClass('btn_edit')) {
+            ancestorNode.children('div.edit_area').show() ;
+
+            var orgValue = ancestorNode.children('span.name').html() ;
+            ancestorNode.children('div.edit_area').children('input').val(orgValue).focus();
+            return  ;
+        }
+        if (target.hasClass('btn_submit')) {
+            var v = target.parent().children('input').val() ;
+            ref.child(key).update({
+                "name": v
+            });
+
+            ancestorNode.children('div.edit_area').hide() ;
+            return  ;
+        }
+
+        if (target.hasClass('btn_close')) {
+            ancestorNode.children('div.edit_area').hide() ;
+            return  ;
         }
     },
     render: function () {
@@ -27,9 +51,22 @@ var BabyList = React.createClass({
         var str = []; 
         for (var i in D) {
             var k = D[i];
-            str.push(<li key={i} data-index={i} onClick={this.handleDelClick}>name is : {k.name} <button className="btn btn_edit">Edit</button> <button className="btn btn_del">Delete</button></li>); 
+            str.push(
+                <li key={i} data-index={i} onClick={this.handleOpClick}>
+                    Name is : <span className="name">{k.name}</span>
+                    <div className="btn_wrap">
+                        <button className="btn btn_edit">Edit</button>
+                        <button className="btn btn_del">Delete</button>
+                    </div>
+                    <div className="edit_area hide">
+                        <input type="text" />
+                        <button className="btn btn_submit" >Save</button>
+                        <button className="btn btn_close" >Close</button>
+                    </div>
+                </li>
+            ); 
         }
-        return (<div>{str}</div>) ;
+        return (<ul>{str}</ul>) ;
     }
 });
 ReactDOM.render(<BabyList />, document.getElementById('babyList') );
@@ -38,9 +75,6 @@ ReactDOM.render(<BabyList />, document.getElementById('babyList') );
 var BabyAdd = React.createClass({
     getInitialState: function () {
         return {babyName: ''};
-    },
-    componentDidMount: function () {
-        var me = this;
     },
     handleClick: function () {
         var v = this.refs.txt.value ;
@@ -55,21 +89,9 @@ var BabyAdd = React.createClass({
     render: function () {
         var D  = this.state ;
         var str = []; 
-        str.push(<input ref="txt" value={D.babyName} placeholder="write sth" onChange={this.handleChange} type="text" />);
-        str.push(<button onClick={this.handleClick}>Add</button>);
+        str.push(<input ref="txt" value={D.babyName} placeholder="Write ..." onChange={this.handleChange} type="text" />);
+        str.push(<button onClick={this.handleClick}>AddBaby</button>);
         return (<div>{str}</div>) ;
     }
 });
 ReactDOM.render(<BabyAdd />, document.getElementById('babyAdd') );
-
-//ref.on("value", function(datasnapshot,error) {
-    //if (error == null) {
-        //var D = datasnapshot.val();
-        //var strHtml = '';
-        //for (var i in D) {
-            //var k = D[i];
-            //strHtml += '<a href="'+ k.url +'">' + k.name + '</a><b data-key="'+i+'" class="btn btn-info">Update</b> <span data-key="'+i+'" class="btn btn-danger">Delete</span> <br>'; 
-        //}
-        //$('#linkList').html(strHtml);
-    //}
-//});
